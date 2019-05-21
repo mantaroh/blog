@@ -12,13 +12,13 @@
   ドキュメントルートからのパスを指定して下さい。 -->
   <!-- data-perpage は1ページあたりのアイテム表示件数です。
   ここで指定した件数ずつページ表示されます。 -->
-  <blog-list data-item-page-path="item.html" data-perpage="10">
+  <blog-list data-item-page-path="main.html" data-perpage="10">
     <div class="left">
       <div class="thumb" style="background-image:url({%= blog_image %});"></div>
     </div>
     <div class="right">
       <p><small>{%= blog_date %}</small></p>
-      <h1>{%= blog_title %}</h1>
+      <h1><a href='{%= blog_#url }'>{%= blog_title %}</a></h1>
       <p>{%= blog_description %}</p>
     </div>
     <style>
