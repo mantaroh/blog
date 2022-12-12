@@ -19,25 +19,41 @@ const posts = contents.data.map(c => {
 ---
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Blog</title>
-</head>
-<body>
+  <head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <!-- Google tag (gtag.js) -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-LSY8WKMJ8R"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-LSY8WKMJ8R');
+      </script>
+      <title>My Blog</title>
+  </head>
+  <body>
+    <head>
+      
+    </head>
     <h1>My Blog</h1>
-    <ul>
-      {posts.map((post) => (
-        <li>
-          <img src={`${post.image}`} alt={`${post.description}`} />
-          <a href={`/posts/${post.alias}/`}>
-            <h2>{post.title}</h2>
-          </a>
-          <time>{post.date}</time>
-          <p>{post.description}</p>
-        </li>
-      ))}
-    </ul>
-</body>
+    <section class="container">
+      <ul>
+        {posts.map((post) => (
+          <li>
+            <figure>
+              <img src={`${post.image}`} alt={`${post.description}`} />
+            </figure>
+            <a href={`/posts/${post.alias}/`}>
+              <h2>{post.title}</h2>
+            </a>
+            <time>{post.date}</time>
+            <p>{post.description}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </body>
 </html>
