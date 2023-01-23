@@ -1,6 +1,7 @@
 ---
 import { spearlyApiClient } from "../lib/spearly"
 import Popular from "../components/popular.astro"
+import List from "../components/list.astro"
 
 const contents = await spearlyApiClient.getList("blog")
 const posts = contents.data.map(c => {
@@ -19,13 +20,11 @@ const posts = contents.data.map(c => {
 })
 ---
 <style>
- .container img {
-    height: 100px;
-  }
   .main {
     display: grid;
     grid-template-columns: auto 240px;
     max-width: 1400px;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.15);
   }
 </style>
 <!DOCTYPE html>
@@ -34,6 +33,7 @@ const posts = contents.data.map(c => {
       <meta charset="UTF-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="icon" type="image/x-icon" href="/favicon.png">
       <!-- Google tag (gtag.js) -->
       <script async src="https://www.googletagmanager.com/gtag/js?id=G-LSY8WKMJ8R"></script>
       <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2166764510444978" crossorigin="anonymous"></script>
@@ -57,27 +57,14 @@ const posts = contents.data.map(c => {
         </script>
   </head>
   <body>
-    <head>
-      
-    </head>
-    <div class='main'>
-      <section class="container">
-        <ul>
-          {posts.map((post) => (
-            <li>
-              <figure>
-                <img src={`${post.image}`} alt={`${post.description}`} />
-              </figure>
-              <a href={`/posts/${post.alias}/`}>
-                <h2>{post.title}</h2>
-              </a>
-              <time>{post.date}</time>
-              <p>{post.description}</p>
-            </li>
-          ))}
-        </ul>
-      </section>
-      <Popular />
+    <div class="content">
+      <head>
+        
+      </head>
+      <div class='main'>
+        <List />
+        <Popular />
+      </div>
     </div>
   </body>
 </html>
