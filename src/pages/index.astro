@@ -1,22 +1,47 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import site from '../data/site.json';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 <BaseLayout>
-  {posts.length === 0 ? (
-    <p>まだ記事がありません。</p>
-  ) : (
-    <ul class="post-list">
-      {posts.map((post) => (
-        <li>
-          <h2><a href={`/blog/${post.id}/`}>{post.data.title}</a></h2>
-          <div class="meta">{post.data.pubDate.toLocaleDateString('ja-JP')}</div>
-          {post.data.description && <p>{post.data.description}</p>}
-        </li>
-      ))}
-    </ul>
-  )}
+  <section class="intro">
+    <p class="eyebrow">Computer Science / Software / AI</p>
+    <h1>Computer Science, Software,<br />and things I actually thought about.</h1>
+    <p>{site.description}</p>
+  </section>
+
+  <section class="archive" aria-labelledby="archive-title">
+    <div class="section-heading">
+      <h2 id="archive-title">Notes</h2>
+      <span>{posts.length} entries</span>
+    </div>
+
+    {posts.length === 0 ? (
+      <p class="empty-state">まだ記事がありません。</p>
+    ) : (
+      <ol class="post-list">
+        {posts.map((post) => (
+          <li>
+            <time datetime={post.data.pubDate.toISOString()}>
+              {post.data.pubDate.toLocaleDateString('ja-JP', {
+                year: 'numeric', month: '2-digit', day: '2-digit'
+              })}
+            </time>
+            <div class="post-summary">
+              <h3><a href={`/blog/${post.id}/`}>{post.data.title}</a></h3>
+              {post.data.description && <p>{post.data.description}</p>}
+              {post.data.tags.length > 0 && (
+                <div class="tags" aria-label="Tags">
+                  {post.data.tags.map((tag: string) => <span class="tag">{tag}</span>)}
+                </div>
+              )}
+            </div>
+          </li>
+        ))}
+      </ol>
+    )}
+  </section>
 </BaseLayout>
