@@ -11,12 +11,25 @@ const { post } = Astro.props;
 const { Content } = await render(post);
 ---
 <BaseLayout title={post.data.title} description={post.data.description}>
-  <article>
-    <h1>{post.data.title}</h1>
-    <div class="meta">{post.data.pubDate.toLocaleDateString('ja-JP')}</div>
-    {post.data.tags.length > 0 && (
-      <div class="tags">{post.data.tags.map((tag: string) => <span class="tag">{tag}</span>)}</div>
-    )}
-    <Content />
+  <article class="article">
+    <header class="article-header">
+      <a class="back-link" href="/">← All notes</a>
+      <time datetime={post.data.pubDate.toISOString()}>
+        {post.data.pubDate.toLocaleDateString('ja-JP', {
+          year: 'numeric', month: '2-digit', day: '2-digit'
+        })}
+      </time>
+      <h1>{post.data.title}</h1>
+      {post.data.description && <p class="article-description">{post.data.description}</p>}
+      {post.data.tags.length > 0 && (
+        <div class="tags" aria-label="Tags">
+          {post.data.tags.map((tag: string) => <span class="tag">{tag}</span>)}
+        </div>
+      )}
+    </header>
+
+    <div class="article-body">
+      <Content />
+    </div>
   </article>
 </BaseLayout>
