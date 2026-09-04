@@ -1,0 +1,31 @@
+---
+import '../styles/global.css';
+import site from '../data/site.json';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description = site.description } = Astro.props;
+const pageTitle = title ? `${title} | ${site.title}` : site.title;
+---
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <title>{pageTitle}</title>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <a href="/"><h1>{site.title}</h1></a>
+        <p>{site.description}</p>
+      </div>
+    </header>
+    <main class="container"><slot /></main>
+    <footer><div class="container">© {new Date().getFullYear()} {site.author || site.title}</div></footer>
+  </body>
+</html>

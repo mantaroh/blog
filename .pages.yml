@@ -1,0 +1,52 @@
+media:
+  input: public/images
+  output: /images
+
+content:
+  - name: posts
+    label: 記事
+    type: collection
+    path: src/content/blog
+    view:
+      fields: [title, pubDate, draft]
+      primary: title
+      sort: [pubDate, title]
+      default:
+        sort: pubDate
+        order: desc
+    fields:
+      - name: title
+        label: タイトル
+        type: string
+      - name: description
+        label: 説明
+        type: text
+      - name: pubDate
+        label: 公開日
+        type: date
+      - name: draft
+        label: 下書き
+        type: boolean
+        default: true
+      - name: tags
+        label: タグ
+        type: string
+        list: true
+      - name: body
+        label: 本文
+        type: rich-text
+
+  - name: site
+    label: ブログ設定
+    type: file
+    path: src/data/site.json
+    fields:
+      - name: title
+        label: ブログ名
+        type: string
+      - name: description
+        label: 説明
+        type: text
+      - name: author
+        label: 著者名
+        type: string
