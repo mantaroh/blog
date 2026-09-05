@@ -4,7 +4,7 @@ description: |-
   YouTube や SNS のリコメンデーションは個人情報をもとに類推している。
   私自身は個人情報をブロックして自分でコントロールしたいので、リコメンデーションがうまく働かないので、自分のローカルで閉じたリコメンデーションをするシステムを構築してみている。
 pubDate: 2026-09-06
-draft: true
+draft: false
 tags:
   - Reccomendation
 ---
