@@ -10,7 +10,13 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await render(post);
 ---
-<BaseLayout title={post.data.title} description={post.data.description}>
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  type="article"
+  publishedTime={post.data.pubDate.toISOString()}
+  tags={post.data.tags}
+>
   <article class="article">
     <header class="article-header">
       <a class="back-link" href="/">← All notes</a>
