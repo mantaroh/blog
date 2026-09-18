@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
-import site from '../data/site.json';
+import siteJa from '../data/site.json';
+import siteEn from '../data/site.en.json';
 
 interface Props {
   title?: string;
@@ -8,37 +9,49 @@ interface Props {
   type?: 'website' | 'article';
   publishedTime?: string;
   tags?: string[];
+  lang?: 'ja' | 'en';
+  alternateHref?: string;
 }
 
 const {
   title,
-  description = site.description,
+  description,
   type = 'website',
   publishedTime,
-  tags = []
+  tags = [],
+  lang = 'ja',
+  alternateHref
 } = Astro.props;
 
+const site = lang === 'en' ? siteEn : siteJa;
+const finalDescription = description ?? site.description;
 const pageTitle = title ? `${title} | ${site.title}` : site.title;
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
 const ogType = type === 'article' ? 'article' : 'website';
+const alternateLang = lang === 'ja' ? 'en' : 'ja';
 ---
 <!doctype html>
-<html lang="ja">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content={description} />
+    <meta name="description" content={finalDescription} />
     <meta name="color-scheme" content="light dark" />
     <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
 
     <link rel="canonical" href={canonicalUrl} />
     <link rel="describedby" href="/llms.txt" type="text/markdown" />
+    <link rel="alternate" hreflang={lang} href={canonicalUrl} />
+    {alternateHref && (
+      <link rel="alternate" hreflang={alternateLang} href={new URL(alternateHref, Astro.site ?? Astro.url.origin)} />
+    )}
 
     <meta property="og:type" content={ogType} />
     <meta property="og:title" content={pageTitle} />
-    <meta property="og:description" content={description} />
+    <meta property="og:description" content={finalDescription} />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:site_name" content={site.title} />
+    <meta property="og:locale" content={lang === 'ja' ? 'ja_JP' : 'en_US'} />
     <meta name="twitter:card" content="summary" />
 
     {type === 'article' && publishedTime && (
@@ -54,9 +67,10 @@ const ogType = type === 'article' ? 'article' : 'website';
     <div class="page-shell">
       <header class="site-header">
         <div class="container header-inner">
-          <a class="site-title" href="/">{site.title}</a>
+          <a class="site-title" href={lang === 'en' ? '/en/' : '/'}>{site.title}</a>
           <nav class="site-nav" aria-label="Primary">
-            <a href="/">Home</a>
+            <a href={lang === 'en' ? '/en/' : '/'}>Home</a>
+            <a href={lang === 'en' ? '/' : '/en/'}>{lang === 'en' ? '日本語' : 'English'}</a>
             <a href="https://mantaroh.org">mantaroh.org</a>
           </nav>
         </div>
