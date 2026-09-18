@@ -43,6 +43,74 @@ function truncate(value, length) {
   return value.slice(0, length - 1).trimEnd() + '…';
 }
 
+function fallbackPreview(url) {
+  const parsed = new URL(url);
+  return {
+    title: url,
+    description: '',
+    image: '',
+    hostname: parsed.hostname.replace(/^www\./, ''),
+  };
+}
+
+function buildCard(href, preview) {
+  const contentChildren = [{
+    type: 'element',
+    tagName: 'strong',
+    properties: { className: ['link-preview-title'] },
+    children: [{ type: 'text', value: preview.title }],
+  }];
+
+  if (preview.description) {
+    contentChildren.push({
+      type: 'element',
+      tagName: 'span',
+      properties: { className: ['link-preview-description'] },
+      children: [{ type: 'text', value: preview.description }],
+    });
+  }
+
+  contentChildren.push({
+    type: 'element',
+    tagName: 'span',
+    properties: { className: ['link-preview-domain'] },
+    children: [{ type: 'text', value: preview.hostname }],
+  });
+
+  const cardChildren = [{
+    type: 'element',
+    tagName: 'span',
+    properties: { className: ['link-preview-content'] },
+    children: contentChildren,
+  }];
+
+  if (preview.image) {
+    cardChildren.push({
+      type: 'element',
+      tagName: 'img',
+      properties: {
+        className: ['link-preview-image'],
+        src: preview.image,
+        alt: '',
+        loading: 'lazy',
+        decoding: 'async',
+      },
+      children: [],
+    });
+  }
+
+  return {
+    type: 'element',
+    tagName: 'a',
+    properties: {
+      className: ['link-preview'],
+      href,
+      rel: ['noopener', 'noreferrer'],
+    },
+    children: cardChildren,
+  };
+}
+
 async function fetchPreview(url) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), PREVIEW_TIMEOUT_MS);
@@ -112,7 +180,7 @@ async function fetchPreview(url) {
     const hostname = new URL(finalUrl).hostname.replace(/^www\./, '');
 
     return {
-      title: truncate(title || hostname, 140),
+      title: truncate(title || finalUrl, 140),
       description: truncate(description, 220),
       image,
       hostname,
@@ -188,65 +256,16 @@ export function rehypeLinkPreviews() {
           const href = anchor.properties && anchor.properties.href;
 
           if (typeof href === 'string' && isExternalHttpUrl(href)) {
+            const fallback = fallbackPreview(href);
+            node.children[index] = buildCard(href, fallback);
+
             jobs.push(fetchPreview(href).then((preview) => {
-              if (!preview) return;
-
-              const contentChildren = [{
-                type: 'element',
-                tagName: 'strong',
-                properties: { className: ['link-preview-title'] },
-                children: [{ type: 'text', value: preview.title }],
-              }];
-
-              if (preview.description) {
-                contentChildren.push({
-                  type: 'element',
-                  tagName: 'span',
-                  properties: { className: ['link-preview-description'] },
-                  children: [{ type: 'text', value: preview.description }],
-                });
+              if (preview) {
+                node.children[index] = buildCard(href, preview);
               }
-
-              contentChildren.push({
-                type: 'element',
-                tagName: 'span',
-                properties: { className: ['link-preview-domain'] },
-                children: [{ type: 'text', value: preview.hostname }],
-              });
-
-              const cardChildren = [{
-                type: 'element',
-                tagName: 'span',
-                properties: { className: ['link-preview-content'] },
-                children: contentChildren,
-              }];
-
-              if (preview.image) {
-                cardChildren.push({
-                  type: 'element',
-                  tagName: 'img',
-                  properties: {
-                    className: ['link-preview-image'],
-                    src: preview.image,
-                    alt: '',
-                    loading: 'lazy',
-                    decoding: 'async',
-                  },
-                  children: [],
-                });
-              }
-
-              node.children[index] = {
-                type: 'element',
-                tagName: 'a',
-                properties: {
-                  className: ['link-preview'],
-                  href,
-                  rel: ['noopener', 'noreferrer'],
-                },
-                children: cardChildren,
-              };
             }));
+
+            continue;
           }
         }
 
