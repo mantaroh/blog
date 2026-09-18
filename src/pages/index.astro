@@ -6,7 +6,7 @@ import site from '../data/site.json';
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
-<BaseLayout>
+<BaseLayout alternateHref="/en/">
   <section class="intro">
     <p class="eyebrow">Computer Science / Software / AI</p>
     <h1>Computer Science, Software,<br />and things I actually thought about.</h1>
