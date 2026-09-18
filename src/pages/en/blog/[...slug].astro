@@ -1,0 +1,73 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blogEn', ({ data }) => !data.draft);
+  const japanesePosts = await getCollection('blog', ({ data }) => !data.draft);
+  const japaneseIds = new Set(japanesePosts.map((post) => post.id));
+
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: {
+      post,
+      alternateHref: japaneseIds.has(post.id) ? `/blog/${post.id}/` : undefined
+    }
+  }));
+}
+
+const { post, alternateHref } = Astro.props;
+const { Content } = await render(post);
+---
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  type="article"
+  publishedTime={post.data.pubDate.toISOString()}
+  tags={post.data.tags}
+  lang="en"
+  alternateHref={alternateHref}
+>
+  <article class="article">
+    <header class="article-header">
+      <a class="back-link" href="/en/">← All notes</a>
+      <time datetime={post.data.pubDate.toISOString()}>
+        {post.data.pubDate.toLocaleDateString('en-US', {
+          year: 'numeric', month: 'short', day: '2-digit'
+        })}
+      </time>
+      <h1>{post.data.title}</h1>
+      {post.data.description && <p class="article-description">{post.data.description}</p>}
+      {alternateHref && <p><a href={alternateHref}>日本語で読む →</a></p>}
+      {post.data.tags.length > 0 && (
+        <div class="tags" aria-label="Tags">
+          {post.data.tags.map((tag: string) => <span class="tag">{tag}</span>)}
+        </div>
+      )}
+    </header>
+
+    <div class="article-body">
+      <Content />
+    </div>
+
+    <section class="comments" aria-labelledby="comments-title">
+      <h2 id="comments-title">Comments</h2>
+      <script
+        src="https://giscus.app/client.js"
+        data-repo="mantaroh/blog"
+        data-repo-id="R_kgDOIaAWqQ"
+        data-category="General"
+        data-category-id="DIC_kwDOIaAWqc4DFXdS"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="preferred_color_scheme"
+        data-lang="en"
+        crossorigin="anonymous"
+        async
+      ></script>
+    </section>
+  </article>
+</BaseLayout>
