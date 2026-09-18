@@ -110,7 +110,9 @@ AI も似たようなところがあって、自分についての情報をほ�
 
 コードは GitHub で公開しています。
 
-- **GitHub リポジトリ:** [https://github.com/mantaroh/youtube-recommendation](https://github.com/mantaroh/youtube-recommendation)
+**GitHub リポジトリ**
+
+https://github.com/mantaroh/youtube-recommendation
 
 このシステムで重視しているのは、大きく3つ。
 
