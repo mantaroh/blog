@@ -38,7 +38,12 @@ const { Content } = await render(post);
       </time>
       <h1>{post.data.title}</h1>
       {post.data.description && <p class="article-description">{post.data.description}</p>}
-      {alternateHref && <p><a href={alternateHref}>日本語で読む →</a></p>}
+      {alternateHref && (
+        <p class="translation-note">
+          This article was originally written in Japanese and translated into English with AI assistance.
+          {' '}<a href={alternateHref}>Read the Japanese original →</a>
+        </p>
+      )}
       {post.data.tags.length > 0 && (
         <div class="tags" aria-label="Tags">
           {post.data.tags.map((tag: string) => <span class="tag">{tag}</span>)}
