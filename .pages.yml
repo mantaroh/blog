@@ -4,7 +4,7 @@ media:
 
 content:
   - name: posts
-    label: 記事
+    label: 日本語記事
     type: collection
     path: src/content/blog
     view:
@@ -36,6 +36,39 @@ content:
         label: 本文
         type: rich-text
 
+  - name: posts_en
+    label: English posts
+    type: collection
+    path: src/content/blog-en
+    view:
+      fields: [title, pubDate, draft]
+      primary: title
+      sort: [pubDate, title]
+      default:
+        sort: pubDate
+        order: desc
+    fields:
+      - name: title
+        label: Title
+        type: string
+      - name: description
+        label: Description
+        type: text
+      - name: pubDate
+        label: Published
+        type: date
+      - name: draft
+        label: Draft
+        type: boolean
+        default: true
+      - name: tags
+        label: Tags
+        type: string
+        list: true
+      - name: body
+        label: Body
+        type: rich-text
+
   - name: site
     label: ブログ設定
     type: file
@@ -49,4 +82,19 @@ content:
         type: text
       - name: author
         label: 著者名
+        type: string
+
+  - name: site_en
+    label: English site settings
+    type: file
+    path: src/data/site.en.json
+    fields:
+      - name: title
+        label: Site title
+        type: string
+      - name: description
+        label: Description
+        type: text
+      - name: author
+        label: Author
         type: string
