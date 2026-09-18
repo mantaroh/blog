@@ -1,21 +1,32 @@
 import { getCollection } from 'astro:content';
-import site from '../data/site.json';
+import siteJa from '../data/site.json';
+import siteEn from '../data/site.en.json';
 
 export async function GET() {
-  const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  const postsJa = (await getCollection('blog', ({ data }) => !data.draft))
+    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+  const postsEn = (await getCollection('blogEn', ({ data }) => !data.draft))
     .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
   const lines = [
-    `# ${site.title}`,
+    `# ${siteJa.title}`,
     '',
-    `> ${site.description}`,
+    `> ${siteJa.description}`,
     '',
-    'このサイトは、コンピューターサイエンス、ソフトウェア、AI、インフラ、開発・研究の実体験や考察を扱う個人技術ブログです。',
+    'A bilingual personal technical blog covering computer science, software, AI, infrastructure, development, and research.',
     '',
-    '## Articles',
+    '## Japanese Articles',
     '',
-    ...posts.map((post) =>
+    ...postsJa.map((post) =>
       `- [${post.data.title}](https://blog.mantaroh.org/blog/${post.id}/)${post.data.description ? `: ${post.data.description}` : ''}`
+    ),
+    '',
+    `## English Articles`,
+    '',
+    `> ${siteEn.description}`,
+    '',
+    ...postsEn.map((post) =>
+      `- [${post.data.title}](https://blog.mantaroh.org/en/blog/${post.id}/)${post.data.description ? `: ${post.data.description}` : ''}`
     ),
     ''
   ];
