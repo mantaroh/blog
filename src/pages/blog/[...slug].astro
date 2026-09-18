@@ -4,10 +4,19 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => !data.draft);
-  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+  const englishPosts = await getCollection('blogEn', ({ data }) => !data.draft);
+  const englishIds = new Set(englishPosts.map((post) => post.id));
+
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: {
+      post,
+      alternateHref: englishIds.has(post.id) ? `/en/blog/${post.id}/` : undefined
+    }
+  }));
 }
 
-const { post } = Astro.props;
+const { post, alternateHref } = Astro.props;
 const { Content } = await render(post);
 ---
 <BaseLayout
@@ -16,6 +25,8 @@ const { Content } = await render(post);
   type="article"
   publishedTime={post.data.pubDate.toISOString()}
   tags={post.data.tags}
+  lang="ja"
+  alternateHref={alternateHref}
 >
   <article class="article">
     <header class="article-header">
@@ -27,6 +38,7 @@ const { Content } = await render(post);
       </time>
       <h1>{post.data.title}</h1>
       {post.data.description && <p class="article-description">{post.data.description}</p>}
+      {alternateHref && <p><a href={alternateHref}>Read in English →</a></p>}
       {post.data.tags.length > 0 && (
         <div class="tags" aria-label="Tags">
           {post.data.tags.map((tag: string) => <span class="tag">{tag}</span>)}
