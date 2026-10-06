@@ -9,15 +9,15 @@ export async function GET() {
   const urls = [
     {
       loc: 'https://blog.mantaroh.org/',
-      lastmod: postsJa[0]?.data.pubDate.toISOString()
+      lastmod: (postsJa[0]?.data.updatedDate ?? postsJa[0]?.data.pubDate)?.toISOString()
     },
     {
       loc: 'https://blog.mantaroh.org/en/',
-      lastmod: postsEn[0]?.data.pubDate.toISOString()
+      lastmod: (postsEn[0]?.data.updatedDate ?? postsEn[0]?.data.pubDate)?.toISOString()
     },
     ...postsJa.map((post) => ({
       loc: `https://blog.mantaroh.org/blog/${post.id}/`,
-      lastmod: post.data.pubDate.toISOString()
+      lastmod: (post.data.updatedDate ?? post.data.pubDate).toISOString()
     })),
     ...postsEn.map((post) => ({
       loc: `https://blog.mantaroh.org/en/blog/${post.id}/`,
