@@ -24,6 +24,9 @@ content:
       - name: pubDate
         label: 公開日
         type: date
+      - name: updatedDate
+        label: 更新日
+        type: date
       - name: draft
         label: 下書き
         type: boolean
@@ -56,6 +59,9 @@ content:
         type: text
       - name: pubDate
         label: Published
+        type: date
+      - name: updatedDate
+        label: Updated
         type: date
       - name: draft
         label: Draft
