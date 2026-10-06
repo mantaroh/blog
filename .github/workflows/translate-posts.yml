@@ -52,3 +52,11 @@ jobs:
 
           git commit -m "Update AI-translated English posts"
           git push
+
+
+      - name: Notify IndexNow
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BEFORE_SHA: ${{ github.event.before }}
+          AFTER_SHA: ${{ github.sha }}
+        run: node .github/scripts/notify-indexnow.mjs
