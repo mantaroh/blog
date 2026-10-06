@@ -24,6 +24,7 @@ const { Content } = await render(post);
   description={post.data.description}
   type="article"
   publishedTime={post.data.pubDate.toISOString()}
+  modifiedTime={post.data.updatedDate?.toISOString()}
   tags={post.data.tags}
   lang="en"
   alternateHref={alternateHref}
